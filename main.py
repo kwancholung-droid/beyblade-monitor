@@ -114,8 +114,8 @@ def main():
         except Exception as e:
             print(f"發生錯誤: {e}")
         
-        # 每 20 分鐘檢查一次
-        time.sleep(1200)
+        # 每 5 分鐘檢查一次
+        time.sleep(300)
 
 if __name__ == "__main__":
     main()
