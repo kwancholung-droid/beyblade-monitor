@@ -8,13 +8,13 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 TARGET_PRODUCTS = {
-    "B0HJ783F18": {  # BX-52
+    "B0HJ783F18": {
         "name": "BX-52 ラスタードラグーン 6-60LC",
         "official_price": 2300,
         "min_price": 1800,
         "max_price": 3200
     },
-    "B0HJ75X3PN": {  # BX-53
+    "B0HJ75X3PN": {
         "name": "BX-53 オールインワンセット",
         "official_price": 7480,
         "min_price": 6000,
@@ -48,7 +48,6 @@ def send_telegram(message: str):
         return False
 
 def extract_price(soup):
-    """嘗試多種方式抓取主要價格"""
     selectors = [
         "#corePrice_feature_div .a-price .a-offscreen",
         "#corePriceDisplay_desktop_feature_div .a-price .a-offscreen",
@@ -64,7 +63,6 @@ def extract_price(soup):
             digits = ''.join(filter(str.isdigit, text.replace(",", "")))
             if digits:
                 price = int(digits)
-                # 過濾明顯不合理的價格（例如積分或錯誤抓取）
                 if 1000 < price < 50000:
                     return price
     return None
@@ -75,16 +73,11 @@ def get_product_info(asin: str):
         resp = requests.get(url, headers=HEADERS, timeout=15)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
-
         price = extract_price(soup)
-
         title_elem = soup.select_one("#productTitle")
         title = title_elem.get_text(strip=True) if title_elem else ""
-
-        # 簡單判斷是否有庫存
         page_text = soup.get_text()
         in_stock = "在庫切れ" not in page_text and "Currently unavailable" not in page_text
-
         return {
             "title": title,
             "price": price,
@@ -100,18 +93,14 @@ def check_targets():
         data = get_product_info(asin)
         if not data:
             continue
-
         price = data["price"]
         print(f"{info['name']} 目前價格: ¥{price if price else '無法取得'}")
-
         if price is None:
             print(f"{info['name']} 無法取得有效價格，跳過")
             continue
-
         if not data["in_stock"]:
             print(f"{info['name']} 目前無庫存")
             continue
-
         if info["min_price"] <= price <= info["max_price"]:
             msg = (
                 f"🔔 <b>正價上架通知！</b>\n\n"
@@ -131,15 +120,13 @@ def check_targets():
 def main():
     print("爆旋陀螺X 監控系統啟動中...")
     send_telegram("✅ 監控系統已重新啟動（加強版）\n正在持續盯著 BX-52 與 BX-53。")
-
     while True:
         try:
             print(f"\n[{datetime.now()}] 開始檢查...")
             check_targets()
         except Exception as e:
             print(f"發生錯誤: {e}")
-        
-        time.sleep(60)  # 每 1 分鐘
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()
