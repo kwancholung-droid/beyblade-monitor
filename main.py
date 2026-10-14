@@ -25,7 +25,7 @@ TARGET_PRODUCTS = {
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
     "Accept-Language": "ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,/;q=0.8",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
 }
 
 def send_telegram(message: str):
@@ -117,7 +117,7 @@ def check_targets():
                 f"🔔 <b>正價上架通知！</b>\n\n"
                 f"📦 <b>{info['name']}</b>\n"
                 f"💰 目前價格：¥{price:,}\n"
-                f"🏷️ 官方定價：¥{info['official_price']:,}\n"
+                f"🏷 官方定價：¥{info['official_price']:,}\n"
                 f"🔗 <a href='{data['url']}'>立即查看商品</a>\n\n"
                 f"時間：{datetime.now().strftime('%Y-%m-%d %H:%M')}"
             )
