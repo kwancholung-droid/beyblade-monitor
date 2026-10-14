@@ -141,5 +141,5 @@ def main():
         
         time.sleep(60)  # 每 1 分鐘
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
