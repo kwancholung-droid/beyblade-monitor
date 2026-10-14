@@ -187,7 +187,7 @@ def main():
             check_toysrus()
         except Exception as e:
             print(f"發生錯誤: {e}")
-        time.sleep(120)  # 每 2 分鐘
+        time.sleep(60)  # 每 1 分鐘
 
 if __name__ == "__main__":
     main()
